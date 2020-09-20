@@ -7,6 +7,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(caret)
 ```
 
 ## Introduction
@@ -26,11 +28,12 @@ or this [link](http://groupware.les.inf.puc-rio.br/har).
 ## Data preparation
 
 Training and test sets are read from file in this section. Also they are prepared according to the following elements:
-* The sets include values as NA, #DIV/0! and the empty string. Those are transformed in NA values.
-* The first 7 columns ae general identification values that are not interesting for the purpose of this project. Those columns are taken out from both sets.
-* There are columns that posses NA values, so they have incomplete information. These columns are taken out from both sets.
 
-```{r cars}
+- The sets include values as NA, #DIV/0! and the empty string. Those are transformed in NA values.
+- The first 7 columns ae general identification values that are not interesting for the purpose of this project. Those columns are taken out from both sets.
+- There are columns that posses NA values, so they have incomplete information. These columns are taken out from both sets.
+
+```{r}
 trainSet <- read.csv("pml-training.csv", na.strings=c("NA","#DIV/0!",""))
 trainSet <- trainSet[,-(1:7)]
 
@@ -43,3 +46,26 @@ trainSet <- trainSet[,-aux]
 testSet <- testSet[,-aux]
 
 ```
+
+## Model fitting
+
+Before the model creation process, we want to know if there is any variable that has a variance near to zero. That kind of variance will not be useful for our prediction model because they have little change accross observations.
+
+```{r}
+zeroVar <- nearZeroVar(trainSet)
+zeroVar
+
+seed <- 399
+```
+
+The result is an empty set, this means that after the data preparation process we don't have this type of variables.
+
+We proceed then to the fitting of the model. We will use a general (`r seed`) seed for reproducibility purposes. After that we will partition the training data to have a validation set for cross validation purposes. We will use a 70% of the data as training set and a 30% of the data as validation set.
+
+```{r}
+set.seed(seed)
+partition <- createDataPartition(trainSet$classe, p=0.7, list=FALSE)
+training <- trainSet[partition,]
+validation <- trainSet[-partition,]
+```
+
