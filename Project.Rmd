@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 library(caret)
+library(randomForest)
 ```
 
 ## Introduction
@@ -69,3 +70,33 @@ training <- trainSet[partition,]
 validation <- trainSet[-partition,]
 ```
 
+We will use a random forest algorithm with the classe variable as output and all other variables as predictors. We expect an out of sample error not grater than 1%.
+
+```{r}
+training$classe <- as.factor(training$classe)
+fit <- randomForest(classe ~ ., data = training)
+
+fit
+```
+
+## Model validation
+
+We will apply this model to the validation set in order to measure its accuracy.
+
+```{r}
+resultsValidation <- predict(fit, newdata=validation)
+matrix <- confusionMatrix(as.factor(validation$classe), resultsValidation)
+
+matrix
+```
+
+As we can see, the accuracy for this model applied to the validation set is `r matrix$overall[1]`. According to this the overall out of sample error is `r 1-matrix$overall[1]`.
+
+## Applying model to test set
+
+The results for the model applied to the test set are the following.
+
+```{r}
+resultsTest <- predict(fit, newdata=testSet)
+resultsTest
+```
