@@ -23,8 +23,23 @@ Velloso, E.; Bulling, A.; Gellersen, H.; Ugulino, W.; Fuks, H. Qualitative Activ
 
 or this [link](http://groupware.les.inf.puc-rio.br/har).
 
+## Data preparation
+
+Training and test sets are read from file in this section. Also they are prepared according to the following elements:
+* The sets include values as NA, #DIV/0! and the empty string. Those are transformed in NA values.
+* The first 7 columns ae general identification values that are not interesting for the purpose of this project. Those columns are taken out from both sets.
+* There are columns that posses NA values, so they have incomplete information. These columns are taken out from both sets.
 
 ```{r cars}
-trainSet <- read.csv("pml-training.csv")
-testSet <- read.csv("pml-testing.csv")
+trainSet <- read.csv("pml-training.csv", na.strings=c("NA","#DIV/0!",""))
+trainSet <- trainSet[,-(1:7)]
+
+testSet <- read.csv("pml-testing.csv", na.strings=c("NA","#DIV/0!",""))
+testSet <- testSet[,-(1:7)]
+
+aux <- c(which(apply(is.na(trainSet), 2, any)),which(apply(is.na(testSet), 2, any)))
+
+trainSet <- trainSet[,-aux]
+testSet <- testSet[,-aux]
+
 ```
