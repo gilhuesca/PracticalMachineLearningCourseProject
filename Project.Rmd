@@ -1,0 +1,30 @@
+---
+title: "Barbell lifts prediction"
+author: "Gil Huesca"
+date: "9/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, we use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants to create a model to predict how well a persone perform barbell lifts.
+
+The training data for this project are available here: [training data](https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv)
+
+The test data are available here: [test data](https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv)
+
+For more information about the dataset and its project, you can consult the document in 
+
+Velloso, E.; Bulling, A.; Gellersen, H.; Ugulino, W.; Fuks, H. Qualitative Activity Recognition of Weight Lifting Exercises. Proceedings of 4th International Conference in Cooperation with SIGCHI (Augmented Human '13) . Stuttgart, Germany: ACM SIGCHI, 2013
+
+or this [link](http://groupware.les.inf.puc-rio.br/har).
+
+
+```{r cars}
+trainSet <- read.csv("pml-training.csv")
+testSet <- read.csv("pml-testing.csv")
+```
